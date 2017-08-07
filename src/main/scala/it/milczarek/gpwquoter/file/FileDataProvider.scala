@@ -23,7 +23,7 @@ class FileDataProvider(appConfig: AppConfig) {
 
   def unzipFile(fileTry: Try[File]): Unit = fileTry match {
     case Success(file) => unzipFile(file)
-    case Failure(e: Exception) => logger.error("Unable to unzip file", e)
+    case Failure(x: Throwable) => logger.error("Unable to unzip file", x)
   }
 
   def resolveDataFile(date: LocalDate): Try[File] = {
@@ -81,8 +81,8 @@ class FileDataProvider(appConfig: AppConfig) {
               }
             } else {
               fileDownloader.download(urlFromRemoteFileName) match {
-                case Success(monthZipFile) =>
-                  unzipFile(monthZipFile)
+                case Success(monthZipFileDownloaded) =>
+                  unzipFile(monthZipFileDownloaded)
                   Success(localDayPrnFile)
                 case Failure(e) => Failure(e)
               }

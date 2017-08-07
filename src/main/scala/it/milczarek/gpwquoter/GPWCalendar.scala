@@ -12,7 +12,7 @@ import scala.collection.JavaConverters._
   */
 class GPWCalendar(appConfig: AppConfig) {
 
-  val logger = LoggerFactory.getLogger(classOf[GPWCalendar])
+  private val logger = LoggerFactory.getLogger(classOf[GPWCalendar])
 
   val businessDays = List(MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY)
 
