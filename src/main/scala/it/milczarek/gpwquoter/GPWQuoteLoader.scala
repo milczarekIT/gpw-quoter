@@ -13,7 +13,7 @@ import scala.util.{Failure, Success}
 /**
   * Created by milczu on 29.01.16.
   */
-class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandler: ActorRef) extends Actor {
+class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandlers: List[ActorRef]) extends Actor {
 
   private val logger = LoggerFactory.getLogger(classOf[GPWQuoteLoader])
   val quoteParser = new QuoteParser
@@ -49,7 +49,7 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
         case Success(file) =>
           val quotes = quoteParser.parse(Paths.get(file.getAbsolutePath))
           logger.info(s"Parsed ${quotes.size} quotes for date: $date")
-          quotes.foreach(quotesHandler ! _)
+          quotes.foreach(q => quotesHandlers.foreach(h => h ! q))
         case Failure(e: HttpResponseException) =>
           if (date == LocalDate.now()) logger.info("File for today not available yet")
           else logger.info(s"File for date $date unresolved (1)", e)
@@ -87,7 +87,7 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
 
 object GPWQuoteLoader {
 
-  def props(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandler: ActorRef) = Props(new GPWQuoteLoader(appConfig, gpwCalendar, quotesHandler))
+  def props(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandlers: List[ActorRef]) = Props(new GPWQuoteLoader(appConfig, gpwCalendar, quotesHandlers))
 }
 
 case object InitGpwQuoteLoader
