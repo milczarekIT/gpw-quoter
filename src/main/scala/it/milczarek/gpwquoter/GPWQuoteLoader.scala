@@ -18,12 +18,16 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
   private val logger = LoggerFactory.getLogger(classOf[GPWQuoteLoader])
   val quoteParser = new QuoteParser
   val fileDataProvider = new FileDataProvider(appConfig)
+  var lastProcessedDate: Option[LocalDate] = None
 
   override def receive: Receive = {
     case InitGpwQuoteLoader => initGpwQuoteLoader()
   }
 
-  def initGpwQuoteLoader() = loadData(findDateRangeToLoad)
+  def initGpwQuoteLoader() {
+    logger.info("Init GPW quotes loading")
+    loadData(findDateRangeToLoad)
+  }
 
   def loadData(range: Option[(LocalDate, LocalDate)]) = range match {
     case None => logger.info("Nothing to load")
@@ -50,6 +54,10 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
           val quotes = quoteParser.parse(Paths.get(file.getAbsolutePath))
           logger.info(s"Parsed ${quotes.size} quotes for date: $date")
           quotes.foreach(q => quotesHandlers.foreach(h => h ! q))
+          lastProcessedDate = lastProcessedDate match {
+            case Some(processedDate) => if(date isAfter processedDate) Some(date) else lastProcessedDate
+            case None => Some(date)
+          }
         case Failure(e: HttpResponseException) =>
           if (date == LocalDate.now()) logger.info("File for today not available yet")
           else logger.info(s"File for date $date unresolved (1)", e)
@@ -71,10 +79,8 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
       findNearestBusinessDay(LocalDate.now())
     }
 
-    def lastProcessedDate: Option[LocalDate] = None
-
     val startDate: LocalDate = lastProcessedDate match {
-      case Some(date) => date
+      case Some(date) => gpwCalendar.nextTradingDay(date)
       case None => LocalDate.parse(appConfig.minDate)
     }
     val endDate = lastBusinessDay
