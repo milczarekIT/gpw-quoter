@@ -10,9 +10,9 @@ import it.milczarek.gpwquoter.domain.{DateNameKey, OHLC, Quote}
   */
 class QuotesHazelcastHandler extends Actor {
 
-  val config = new Config()
+  private val config = new Config().setProperty("hazelcast.logging.type", "slf4j")
+  private val h: HazelcastInstance = Hazelcast.newHazelcastInstance(config)
 
-  val h: HazelcastInstance = Hazelcast.newHazelcastInstance(config)
   val quotesMap: IMap[DateNameKey, OHLC] = h.getMap("quotes")
 
   override def receive: Receive = {
