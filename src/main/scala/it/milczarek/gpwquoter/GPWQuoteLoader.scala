@@ -21,7 +21,7 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
   var lastProcessedDate: Option[LocalDate] = None
 
   override def receive: Receive = {
-    case InitGpwQuoteLoader => initGpwQuoteLoader()
+    case LoadQuotes => initGpwQuoteLoader()
   }
 
   def initGpwQuoteLoader() {
@@ -84,9 +84,7 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
       case None => LocalDate.parse(appConfig.minDate)
     }
     val endDate = lastBusinessDay
-
-    if (startDate == endDate) None
-    else Some((startDate, endDate))
+    Some((startDate, endDate))
   }
 
 }
@@ -96,4 +94,4 @@ object GPWQuoteLoader {
   def props(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandlers: List[ActorRef]) = Props(new GPWQuoteLoader(appConfig, gpwCalendar, quotesHandlers))
 }
 
-case object InitGpwQuoteLoader
+case object LoadQuotes
