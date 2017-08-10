@@ -13,4 +13,5 @@ class AppConfig(name: String) {
   val dataFilesLocation = config.getString("dataFilesLocation")
   val feedProviderUrl = config.getString("feedProviderUrl")
   val excludedTradingDays = config.getConfig("calendar.excludedDays")
+  val minutesIntervalForRequestingData = config.getInt("minutesIntervalForRequestingData")
 }
