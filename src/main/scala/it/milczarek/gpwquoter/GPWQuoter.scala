@@ -26,6 +26,7 @@ object GPWQuoter {
     val gpwQuoteLoader = actorSystem.actorOf(GPWQuoteLoader.props(appConfig, gpwCalendar, List(quotesLoggingHandler, quotesHazelcastHandler)), "gpwQuoteLoader")
 
     import actorSystem.dispatcher
-    actorSystem.scheduler.schedule(0 milliseconds, 1 hour, gpwQuoteLoader, InitGpwQuoteLoader)
+    val minutesInterval = appConfig.minutesIntervalForRequestingData
+    actorSystem.scheduler.schedule(0 milliseconds, minutesInterval minutes, gpwQuoteLoader, LoadQuotes)
   }
 }
