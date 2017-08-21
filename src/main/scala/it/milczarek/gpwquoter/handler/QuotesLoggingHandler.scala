@@ -12,7 +12,7 @@ class QuotesLoggingHandler extends Actor {
   private val logger = LoggerFactory.getLogger(classOf[QuotesLoggingHandler])
 
   override def receive: Receive = {
-    case q: Quote => logger.trace(s"Handled quote: $q")
+    case q: Quote => logger.debug(s"Handled quote: $q")
     case a: Any => logger.warn(s"Handled unexpected message: $a")
   }
 }
