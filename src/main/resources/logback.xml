@@ -6,13 +6,17 @@
         </encoder>
     </appender>
 
-    <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <!--<appender name="FILE" class="ch.qos.logback.core.FileAppender">
         <file>gpwquoter.log</file>
         <append>false</append>
         <encoder>
             <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{25} - %msg%n</pattern>
         </encoder>
-    </appender>
+    </appender>-->
+
+    <logger name="it.milczarek.gpwquoter.handler.QuotesLoggingHandler" level="info"/>
+    <logger name="it.milczarek.gpwquoter.handler.QuotesJdbcHandler" level="debug"/>
+    <logger name="slick.compiler.QueryCompiler" level="info"/>
 
     <root level="info">
         <!--<appender-ref ref="FILE"/>-->

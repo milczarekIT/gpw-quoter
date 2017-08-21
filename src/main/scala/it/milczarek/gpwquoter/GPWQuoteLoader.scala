@@ -4,7 +4,9 @@ import java.nio.file.{NoSuchFileException, Paths}
 import java.time.LocalDate
 
 import akka.actor.{Actor, ActorRef, Props}
+import it.milczarek.gpwquoter.domain.Quote
 import it.milczarek.gpwquoter.file.FileDataProvider
+import it.milczarek.gpwquoter.jdbc.QuoteDao
 import org.apache.http.client.HttpResponseException
 import org.slf4j.LoggerFactory
 
@@ -18,7 +20,8 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
   private val logger = LoggerFactory.getLogger(classOf[GPWQuoteLoader])
   val quoteParser = new QuoteParser
   val fileDataProvider = new FileDataProvider(appConfig)
-  var lastProcessedDate: Option[LocalDate] = None
+  val quotesDao = QuoteDao
+  var lastProcessedDate: Option[LocalDate] = quotesDao.maxDate().map(_.minusDays(1))
 
   override def receive: Receive = {
     case LoadQuotes => initGpwQuoteLoader()
@@ -55,7 +58,7 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
           logger.info(s"Parsed ${quotes.size} quotes for date: $date")
           quotes.foreach(q => quotesHandlers.foreach(h => h ! q))
           lastProcessedDate = lastProcessedDate match {
-            case Some(processedDate) => if(date isAfter processedDate) Some(date) else lastProcessedDate
+            case Some(processedDate) => if (date isAfter processedDate) Some(date) else lastProcessedDate
             case None => Some(date)
           }
         case Failure(e: HttpResponseException) =>
@@ -95,3 +98,5 @@ object GPWQuoteLoader {
 }
 
 case object LoadQuotes
+
+case class QuotesBulkMessage(quotes: Seq[Quote])
