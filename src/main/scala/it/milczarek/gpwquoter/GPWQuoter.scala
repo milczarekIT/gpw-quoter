@@ -1,7 +1,7 @@
 package it.milczarek.gpwquoter
 
 import akka.actor.{ActorSystem, Props}
-import it.milczarek.gpwquoter.handler.{QuotesHazelcastHandler, QuotesJdbcHandler, QuotesLoggingHandler}
+import it.milczarek.gpwquoter.handler.{QuotesJdbcHandler, QuotesLoggingHandler}
 import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
@@ -21,7 +21,6 @@ object GPWQuoter {
     val appConfig = new AppConfig("application.conf")
     val gpwCalendar = new GPWCalendar(appConfig)
 
-    //val quotesHazelcastHandler = actorSystem.actorOf(Props[QuotesHazelcastHandler], "quotesHazelcastHandler")
     val quotesJdbcHandler = actorSystem.actorOf(Props[QuotesJdbcHandler], "quotesJdbcHandler")
     val quotesLoggingHandler = actorSystem.actorOf(Props[QuotesLoggingHandler], "quotesLoggingHandler")
     val gpwQuoteLoader = actorSystem.actorOf(GPWQuoteLoader.props(appConfig, gpwCalendar, List(quotesLoggingHandler, quotesJdbcHandler)), "gpwQuoteLoader")
