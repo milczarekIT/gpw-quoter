@@ -13,7 +13,7 @@ import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-class QuotesTable(tag: Tag) extends Table[Quote](tag, "quotes") {
+class QuotesTable(tag: Tag) extends Table[Quote](tag, Some("public"), "quotes") {
 
   private implicit val localDateToDate = MappedColumnType.base[LocalDate, Date](
     l => Date.valueOf(l),

@@ -18,7 +18,7 @@ class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandl
   val quoteParser = new QuoteParser
   val fileDataProvider = new FileDataProvider(appConfig)
   val quotesDao = QuoteDao
-  var lastProcessedDate: Option[LocalDate] = None //quotesDao.maxDate().map(_.minusDays(1))
+  var lastProcessedDate: Option[LocalDate] = quotesDao.maxDate().map(_.minusDays(1))
 
   override def receive: Receive = {
     case LoadQuotes => initGpwQuoteLoader()
