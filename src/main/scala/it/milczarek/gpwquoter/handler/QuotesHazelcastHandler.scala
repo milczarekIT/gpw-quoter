@@ -7,9 +7,6 @@ import com.hazelcast.config.{Config, ManagementCenterConfig}
 import com.hazelcast.core.{Hazelcast, HazelcastInstance, IMap}
 import it.milczarek.gpwquoter.domain.{DateNameKey, OHLC, Quote}
 
-/**
-  * Created by milczu on 30.01.16.
-  */
 class QuotesHazelcastHandler extends Actor {
 
   private val config = initHazelcastConfig

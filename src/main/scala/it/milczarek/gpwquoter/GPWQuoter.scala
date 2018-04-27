@@ -6,10 +6,6 @@ import org.slf4j.LoggerFactory
 
 import scala.concurrent.duration._
 
-
-/**
-  * Created by milczu on 29.01.16.
-  */
 object GPWQuoter {
 
   private val logger = LoggerFactory.getLogger(classOf[App])

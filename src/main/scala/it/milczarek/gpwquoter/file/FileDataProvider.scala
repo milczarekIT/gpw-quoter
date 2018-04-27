@@ -10,9 +10,6 @@ import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success, Try}
 
-/**
-  * Created by milczu on 30.01.16.
-  */
 class FileDataProvider(appConfig: AppConfig) {
 
   private val logger = LoggerFactory.getLogger(classOf[FileDataProvider])

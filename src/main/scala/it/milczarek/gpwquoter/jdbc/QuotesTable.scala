@@ -7,15 +7,12 @@ import com.typesafe.config.ConfigFactory
 import it.milczarek.gpwquoter.domain.Quote
 import slick.jdbc.PostgresProfile.api._
 import slick.jdbc.meta.MTable
-import slick.lifted.TableQuery
+import slick.lifted.{Index, PrimaryKey, ProvenShape, TableQuery}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 import scala.concurrent.duration._
 import scala.concurrent.{Await, Future}
 
-/**
-  * Created by e-bzmk on 18/08/2017.
-  */
 class QuotesTable(tag: Tag) extends Table[Quote](tag, "quotes") {
 
   private implicit val localDateToDate = MappedColumnType.base[LocalDate, Date](
@@ -23,25 +20,25 @@ class QuotesTable(tag: Tag) extends Table[Quote](tag, "quotes") {
     d => d.toLocalDate
   )
 
-  def name = column[String]("name", O.Length(100))
+  def name: Rep[String] = column[String]("name", O.Length(100))
 
-  def date = column[LocalDate]("date_val")
+  def date: Rep[LocalDate] = column[LocalDate]("date_val")
 
-  def open = column[Double]("open")
+  def open: Rep[Double] = column[Double]("open")
 
-  def high = column[Double]("high")
+  def high: Rep[Double] = column[Double]("high")
 
-  def low = column[Double]("low")
+  def low: Rep[Double] = column[Double]("low")
 
-  def close = column[Double]("close")
+  def close: Rep[Double] = column[Double]("close")
 
-  def volume = column[Double]("volume")
+  def volume: Rep[Double] = column[Double]("volume")
 
-  def pk = primaryKey("pk_quotes", (name, date))
+  def pk: PrimaryKey = primaryKey("pk_quotes", (name, date))
 
-  def idxName = index("idx_name", name)
+  def idxName: Index = index("idx_name", name)
 
-  def * = (name, date, open, high, low, close, volume) <> (Quote.tupled, Quote.unapply)
+  def * : ProvenShape[Quote] = (name, date, open, high, low, close, volume) <> (Quote.tupled, Quote.unapply)
 }
 
 object QuoteDao {
@@ -60,7 +57,7 @@ object QuoteDao {
 
   def findByName(name: String): Future[Option[Quote]] = db.run(quotes.filter(_.name === name).result).map(_.headOption)
 
-  def insertOrUpdate(quote: Quote) = waitForResult(db.run(quotes.insertOrUpdate(quote)))
+  def insertOrUpdate(quote: Quote): Int = waitForResult(db.run(quotes.insertOrUpdate(quote)))
 
   def maxDate(): Option[LocalDate] = {
     val queryMaxDate = sql"""SELECT max(date_val) FROM quotes""".as[Date]

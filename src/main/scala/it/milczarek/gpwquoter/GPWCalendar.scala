@@ -7,9 +7,6 @@ import org.slf4j.LoggerFactory
 
 import scala.collection.JavaConverters._
 
-/**
-  * Created by milczu on 30.01.16.
-  */
 class GPWCalendar(appConfig: AppConfig) {
 
   private val logger = LoggerFactory.getLogger(classOf[GPWCalendar])

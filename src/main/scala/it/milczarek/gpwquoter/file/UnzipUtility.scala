@@ -3,9 +3,6 @@ package it.milczarek.gpwquoter.file
 import java.io.{BufferedOutputStream, File, FileInputStream, FileOutputStream}
 import java.util.zip.ZipInputStream
 
-/**
-  * Created by milczu on 30.01.16.
-  */
 object UnzipUtility {
 
   val bufferSize = 4096

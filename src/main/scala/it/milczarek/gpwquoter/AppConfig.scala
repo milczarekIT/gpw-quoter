@@ -1,17 +1,14 @@
 package it.milczarek.gpwquoter
 
-import com.typesafe.config.ConfigFactory
+import com.typesafe.config.{Config, ConfigFactory}
 
-/**
-  * Created by milczu on 29.01.16.
-  */
 class AppConfig(name: String) {
 
   private lazy val config = ConfigFactory.load(name).getConfig("it.milczarek.gpwquoter")
 
-  val minDate = config.getString("minDate")
-  val dataFilesLocation = config.getString("dataFilesLocation")
-  val feedProviderUrl = config.getString("feedProviderUrl")
-  val excludedTradingDays = config.getConfig("calendar.excludedDays")
-  val minutesIntervalForRequestingData = config.getInt("minutesIntervalForRequestingData")
+  val minDate: String = config.getString("minDate")
+  val dataFilesLocation: String = config.getString("dataFilesLocation")
+  val feedProviderUrl: String = config.getString("feedProviderUrl")
+  val excludedTradingDays: Config = config.getConfig("calendar.excludedDays")
+  val minutesIntervalForRequestingData: Int = config.getInt("minutesIntervalForRequestingData")
 }

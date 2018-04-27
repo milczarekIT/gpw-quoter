@@ -12,9 +12,6 @@ import org.slf4j.LoggerFactory
 
 import scala.util.{Failure, Success}
 
-/**
-  * Created by milczu on 29.01.16.
-  */
 class GPWQuoteLoader(appConfig: AppConfig, gpwCalendar: GPWCalendar, quotesHandlers: List[ActorRef]) extends Actor {
 
   private val logger = LoggerFactory.getLogger(classOf[GPWQuoteLoader])

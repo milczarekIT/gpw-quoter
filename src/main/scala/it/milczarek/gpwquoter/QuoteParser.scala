@@ -9,9 +9,6 @@ import it.milczarek.gpwquoter.domain.Quote
 
 import scala.io.{Codec, Source}
 
-/**
-  * Created by milczu on 30.01.16.
-  */
 class QuoteParser {
 
   private val dateFormatter = DateTimeFormatter.ofPattern("yyyyMMdd")
