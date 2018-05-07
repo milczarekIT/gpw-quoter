@@ -3,5 +3,5 @@
 project/
 target/
 /data/
-/src/main/scala/it/milczarek/gpwquoter/jdbc/temp.sc
 /lib/
+*.iml
